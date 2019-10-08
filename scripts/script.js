@@ -25,37 +25,76 @@ $("#show-weather-data").on("click", function() {
 
 
 function showCarparkData() {
-    
+
 
     axios.get("https://api.data.gov.sg/v1/transport/carpark-availability")
-            .then(function(response) {
-                let result = response
-                console.log(result)
-                let testName=
+        .then(function(response) {
+            let result = response
+            console.log(result)
+            let testName =
                 alert("Car works!")
-            });
+        });
 
 };
 
 
 function showWeatherData() {
-    
+
 
     axios.get("https://api.data.gov.sg/v1/environment/air-temperature")
-            .then(function(response) {
-                // let result = response.data.metadata
-                console.log(response)
+        .then(function(response) {
+            // let result = response.data.metadata
+            console.log(response)
+
+            let stations = response.data.metadata.stations
+            let readings = response.data.items[0].readings
+
+            console.log(readings)
+            console.log(stations)
+            
+            let newDataArray = []
+            
+            for (var i = 0; i < stations.length; i++) {
+                $("#weather-chart").append("Station Name: " + stations[i].name + "Temperature: " + readings[i].value)
                 
-                let stations = response.data.metadata.stations
-                let readings = response.data.items[0].readings
+                let addData = {
+                    "name": stations[i].name,
+                    "value": readings[i].value,
+                };
                 
-                console.log(readings)
-                console.log(stations)
-                for (var i=0; i<stations.length; i++){
-                    $("#weather-chart").append("Station Name: " +  stations[i].name + "Temperature: " + readings[i].value)
-                }
-                alert("Weather works!")
-            });
+                console.log(addData)
+                
+                newDataArray.push(addData);
+                // newDataArray = newDataArray.push({"name": stations[i].name, "value": readings[i].value})
+                // newDataArray = newDataArray.push(readings[i].value)
+                // console.log("This is the new array: ")
+                // console.log(newDataArray)
+            }
+            alert("Weather works!")
+            
+            console.log("This is the new array: ")
+            console.log(newDataArray)
+
+            // D3 chart plotting
+            var ndx = crossfilter(newDataArray);
+            var name_dim = ndx.dimension(dc.pluck('name'));
+            var temperature_dim = name_dim.group().reduceSum(dc.pluck('value'))
+
+            dc.barChart('#weather-chart')
+                .width(300)
+                .height(150)
+                .margins({ top: 10, right: 50, bottom: 30, left: 50 })
+                .dimension(name_dim)
+                .group(temperature_dim)
+                .transitionDuration(500)
+                .x(d3.scale.ordinal())
+                .xUnits(dc.units.ordinal)
+                .xAxisLabel("Person")
+                .yAxis().ticks(4);
+
+            dc.renderAll();
+
+
+        });
 
 };
-
