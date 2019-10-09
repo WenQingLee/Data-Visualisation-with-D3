@@ -6,6 +6,21 @@ function createGraph(error, salaryData){
     
     var ndx = crossfilter(salaryData)
     
+    
+    // To show gender distribution graph
+    showGenderDistribution(ndx)
+    
+    // To show discipline type selection
+    disciplineType(ndx)
+    
+    dc.renderAll();
+    
+}
+
+
+function showGenderDistribution(ndx){
+    
+    // To display gender distribution graph
     var dim = ndx.dimension(dc.pluck('sex'))
     
     // var genderDistribution=ndx.dimension(dc.pluck('sex')).group
@@ -21,11 +36,19 @@ function createGraph(error, salaryData){
         .transitionDuration(500)
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
-        .elasticY(true)
+        // .elasticY(true)
         .xAxisLabel("Gender")
         .yAxis().ticks(20);
     
-    dc.renderAll();
-    
 }
 
+
+// To display the discipline selection
+function disciplineType(ndx) {
+    var dim = ndx.dimension(dc.pluck('discipline'));
+    var group = dim.group();
+    
+    dc.selectMenu("#discipline-type")
+        .dimension(dim)
+        .group(group);
+}
