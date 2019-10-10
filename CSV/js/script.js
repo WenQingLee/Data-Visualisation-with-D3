@@ -24,11 +24,17 @@ function createGraph(error, salaryData) {
     // To show the rank type distribution
     rankType(ndx)
     
-    // To show gender distribution for professors
+    // To show percentage for professors for each gender
     percentageThatAreProfessors(ndx, "Male", "#percent-of-male-professors")
     percentageThatAreProfessors(ndx, "Female", "#percent-of-female-professors")
     
+    // To show percentage of assistant professors for each gender
+    percentageThatAreAsstProfessors(ndx, "Male", "#percent-of-male-asst-professors")
+    percentageThatAreAsstProfessors(ndx, "Female", "#percent-of-female-asst-professors")
     
+    // To show percentage of associate professors for each gender
+    percentageThatAreAssocProfessors(ndx, "Male", "#percent-of-male-assoc-professors")
+    percentageThatAreAssocProfessors(ndx, "Female", "#percent-of-female-assoc-professors")
 
     dc.renderAll();
 
@@ -197,7 +203,7 @@ function rankType(ndx) {
 }
 
 
-// To determine the gender distribution of professors
+// To determine the distribution of professors for each gender
 
 function percentageThatAreProfessors(ndx, gender, element) {
     var percentageThatAreProf = ndx.groupAll().reduce(
@@ -240,3 +246,91 @@ function percentageThatAreProfessors(ndx, gender, element) {
         .group(percentageThatAreProf)
 }
 
+
+
+// To determine the distribution of assistant professor for each gender
+
+function percentageThatAreAsstProfessors(ndx, gender, element) {
+    var percentageThatAreAsstProf = ndx.groupAll().reduce(
+        // Add
+        function(p, v) {
+            if (v.sex === gender) {
+                p.count++;
+                if(v.rank === "AsstProf") {
+                    p.are_asst_prof++;
+                }
+            }
+            return p;
+        },
+        // Remove
+        function(p, v) {
+            if (v.sex === gender) {
+                p.count--;
+                if(v.rank === "AsstProf") {
+                    p.are_asst_prof--;
+                }
+            }
+            return p;
+        },
+        // initialise
+        function() {
+            return {count: 0, are_asst_prof: 0};    
+        },
+    );
+    
+    // To show the percentages based on the element input up to 2 decimal places
+    dc.numberDisplay(element)
+        .formatNumber(d3.format(".2%"))
+        .valueAccessor(function (d) {
+            if (d.count == 0) {
+                return 0;
+            } else {
+                return (d.are_asst_prof / d.count);
+            }
+        })
+        .group(percentageThatAreAsstProf)
+}
+
+
+// To determine the distribution of associate professor for each gender
+
+function percentageThatAreAssocProfessors(ndx, gender, element) {
+    var percentageThatAreAssocProf = ndx.groupAll().reduce(
+        // Add
+        function(p, v) {
+            if (v.sex === gender) {
+                p.count++;
+                if(v.rank === "AssocProf") {
+                    p.are_assoc_prof++;
+                }
+            }
+            return p;
+        },
+        // Remove
+        function(p, v) {
+            if (v.sex === gender) {
+                p.count--;
+                if(v.rank === "AssocProf") {
+                    p.are_assoc_prof--;
+                }
+            }
+            return p;
+        },
+        // initialise
+        function() {
+            return {count: 0, are_assoc_prof: 0};    
+        },
+    );
+    
+    // To show the percentages based on the element input up to 2 decimal places
+    dc.numberDisplay(element)
+        .formatNumber(d3.format(".2%"))
+        .valueAccessor(function (d) {
+            if (d.count == 0) {
+                return 0;
+            } else {
+                return (d.are_assoc_prof / d.count);
+            }
+        })
+        .group(percentageThatAreAssocProf)
+}
