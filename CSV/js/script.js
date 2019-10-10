@@ -9,8 +9,13 @@ function createGraph(error, salaryData) {
     // To convert the salaries to integers otherwise it will not work in averageSalary function
     salaryData.forEach(function(d) {
         d.salary = parseInt(d.salary)
+        d.yrs_service = parseInt(d["yrs.service"]);
     })
-
+    
+    // yearsData.forEach(function(d){
+    //     d.yrs.service = parseInt(d.yrs.service)
+    // })
+    
 
     // To show gender distribution graph
     showGenderDistribution(ndx)
@@ -35,6 +40,9 @@ function createGraph(error, salaryData) {
     // To show percentage of associate professors for each gender
     percentageThatAreAssocProfessors(ndx, "Male", "#percent-of-male-assoc-professors")
     percentageThatAreAssocProfessors(ndx, "Female", "#percent-of-female-assoc-professors")
+
+    // To show the correlation between years and salary
+    yearsAndSalary(ndx)
 
     dc.renderAll();
 
@@ -333,4 +341,45 @@ function percentageThatAreAssocProfessors(ndx, gender, element) {
             }
         })
         .group(percentageThatAreAssocProf)
+}
+
+
+function yearsAndSalary(ndx) {
+    
+    // To define the gender color domain and ranges for male and female
+    var genderColors = d3.scale.ordinal()
+        .domain(["Female", "Male"])
+        .range(["pink", "blue"]);
+    
+    // To get the data based on years of service and return a new group
+    var eDim = ndx.dimension(dc.pluck("yrs_service"));
+    var experienceDim = ndx.dimension(function(d) {
+       return [d.yrs_service, d.salary, d.rank, d.sex];
+    });
+    var experienceSalaryGroup = experienceDim.group();
+    
+    // Selecting the min and max years of experice by finding the bottm and top items and the array location of 0, which is d.yrs_service
+    var minExperience = eDim.bottom(1)[0].yrs_service;
+    var maxExperience = eDim.top(1)[0].yrs_service;
+    
+    // To show the scatter plot diagram. change brushOn to false if the graph is not required to be interactive
+    // The d.key is referencing to the data from experienceSalaryGroup which is derived from experienceDim
+    dc.scatterPlot("#years-salary")
+        .width(800)
+        .height(400)
+        .x(d3.scale.linear().domain([minExperience, maxExperience]))
+        .brushOn(true)
+        .symbolSize(8)
+        .clipPadding(10)
+        .xAxisLabel("Years Of Service")
+        .title(function(d) {
+            return d.key[2] + " earned " + d.key[1];
+        })
+        .colorAccessor(function (d) {
+            return d.key[3];
+        })
+        .colors(genderColors)
+        .dimension(experienceDim)
+        .group(experienceSalaryGroup)
+        .margins({top: 10, right: 50, bottom: 75, left: 75});
 }
