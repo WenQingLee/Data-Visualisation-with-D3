@@ -32,31 +32,61 @@
 
 <body>
 
-    <h1>Data Visualisation for Singapore Weather data</h1>
+    <div class="container-fluid">
 
-    <div id="weather-chart">
-        <button type="button" class="btn btn-primary" id="show-weather-data">Show Weather Data</button>
+        <h1>Data Visualisation for Singapore Temperature data</h1>
 
-        <div>
-            <thead>
-                <tr>
-                    <th scope="col">S/N</th>
-                    <th scope="col">Station Name</th>
-                    <th scope="col">Temperature</th>
-                </tr>
-            </thead>
+        <hr />
 
-            <!--Display to append the results from the search-->
-            <tbody id="display-weather-results">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Data Visualisation with API</li>
+            </ol>
+        </nav>
 
-            </tbody>
+        <p>The data for the temperature is taken from data.gov.sg: https://data.gov.sg/dataset/realtime-weather-readings</p>
+
+        <br />
+
+        <div class="container-fluid col-lg-12">
+
+            <div id="weather-chart" class="col-lg-12">
+
+            </div>
+
+            <div id="weather-pie-chart" class="col-lg-12">
+
+            </div>
 
         </div>
+
+
+
+        <div>
+            <button type="button" class="btn btn-primary" id="show-weather-data">Show Temperature Data</button>
+
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">S/N</th>
+                            <th scope="col">Station Name</th>
+                            <th scope="col">Temperature</th>
+                        </tr>
+                    </thead>
+
+                    <!--Display to append the results from the search-->
+                    <tbody id="display-weather-results">
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
     </div>
 
-    <div id="weather-pie-chart">
-
-    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

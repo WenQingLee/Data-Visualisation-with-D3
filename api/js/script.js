@@ -2,6 +2,8 @@
 $("#show-weather-data").on("click", function() {
 
     showWeatherData()
+    
+    $("#show-weather-data")[0].style.display="none"
 
 });
 
@@ -29,7 +31,7 @@ function showWeatherData() {
             $("#display-weather-results").append("<tr><td>" + num + "</td>" + "<td>" + stations[i].name + "</td>" + "<td>" + readings[i].value + "</td></tr>");
                 
                 
-                $("#weather-chart").append("Station Name: " + stations[i].name + "Temperature: " + readings[i].value +"<br />")
+                // $("#display-weather-results").append("Station Name: " + stations[i].name + "Temperature: " + readings[i].value +"<br />")
                 
                 // Creating an object to add into the new data array
                 let addData = {
@@ -75,7 +77,9 @@ function showWeatherData() {
                 .radius(600)
                 .transitionDuration(1500)
                 .dimension(name_dim)
+                .legend(dc.legend().x(100).y(10).itemHeight(13).gap(5))
                 .group(temperature_dim);
+                
 
             dc.renderAll();
 
