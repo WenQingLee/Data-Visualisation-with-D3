@@ -23,6 +23,12 @@ function createGraph(error, salaryData) {
     
     // To show the rank type distribution
     rankType(ndx)
+    
+    // To show gender distribution for professors
+    percentageThatAreProfessors(ndx, "Male", "#percent-of-male-professors")
+    percentageThatAreProfessors(ndx, "Female", "#percent-of-female-professors")
+    
+    
 
     dc.renderAll();
 
@@ -49,6 +55,7 @@ function showGenderDistribution(ndx) {
         .xUnits(dc.units.ordinal)
         // .elasticY(true)
         .xAxisLabel("Gender")
+        .yAxisLabel("Number")
         .yAxis().ticks(20);
 
 }
@@ -120,6 +127,7 @@ function averageSalary(ndx) {
         .xUnits(dc.units.ordinal)
         .elasticY(true)
         .xAxisLabel("Gender")
+        .yAxisLabel("Salary (in dollars)")
         .yAxis().ticks(4);
 
 }
@@ -182,7 +190,53 @@ function rankType(ndx) {
         .xUnits(dc.units.ordinal)
         .legend(dc.legend().x(320).y(20).itemHeight(15).gap(5))
         .margins({top: 10, right: 100, bottom: 30, left: 30});
+        
 
 
 
 }
+
+
+// To determine the gender distribution of professors
+
+function percentageThatAreProfessors(ndx, gender, element) {
+    var percentageThatAreProf = ndx.groupAll().reduce(
+        // Add
+        function(p, v) {
+            if (v.sex === gender) {
+                p.count++;
+                if(v.rank === "Prof") {
+                    p.are_prof++;
+                }
+            }
+            return p;
+        },
+        // Remove
+        function(p, v) {
+            if (v.sex === gender) {
+                p.count--;
+                if(v.rank === "Prof") {
+                    p.are_prof--;
+                }
+            }
+            return p;
+        },
+        // initialise
+        function() {
+            return {count: 0, are_prof: 0};    
+        },
+    );
+    
+    // To show the percentages based on the element input up to 2 decimal places
+    dc.numberDisplay(element)
+        .formatNumber(d3.format(".2%"))
+        .valueAccessor(function (d) {
+            if (d.count == 0) {
+                return 0;
+            } else {
+                return (d.are_prof / d.count);
+            }
+        })
+        .group(percentageThatAreProf)
+}
+
