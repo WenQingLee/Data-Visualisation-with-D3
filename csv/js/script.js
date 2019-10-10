@@ -68,7 +68,6 @@ function showGenderDistribution(ndx) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         // .elasticY(true)
-        .xAxisLabel("Gender")
         .yAxisLabel("Number")
         .yAxis().ticks(20);
 
@@ -140,7 +139,6 @@ function averageSalary(ndx) {
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .elasticY(true)
-        .xAxisLabel("Gender")
         .yAxisLabel("Salary (in dollars)")
         .yAxis().ticks(4);
 

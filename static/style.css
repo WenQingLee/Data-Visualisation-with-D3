@@ -1,0 +1,17 @@
+html,
+body {
+    height: 100%;
+    font-family: open-sans, san-serif;
+}
+
+
+#jumbotron-image{
+    background-image: url("images/jumbotron_image.jpg");
+    background-repeat:no-repeat;
+    background-size:cover;
+    height:30rem;
+}
+
+footer{
+    background-color:cyan;
+}
